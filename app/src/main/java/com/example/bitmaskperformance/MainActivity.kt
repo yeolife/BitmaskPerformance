@@ -43,17 +43,20 @@ fun Greeting(viewModel: CardViewModel, modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("성능 테스트") },
+                title = { Text(text = "Test") },
                 actions = {
                     Row(
                         modifier = Modifier.padding(end = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Button(onClick = { viewModel.insertCards(1000) }) {
-                            Text("Add Cards")
+                            Text("Add")
                         }
                         Button(onClick = { viewModel.updateCards(1000) }) {
-                            Text("Update Cards")
+                            Text("Update")
+                        }
+                        Button(onClick = { viewModel.deleteCards() }) {
+                            Text("Delete")
                         }
                     }
                 }

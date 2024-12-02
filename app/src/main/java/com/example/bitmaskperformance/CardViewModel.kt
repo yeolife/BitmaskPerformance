@@ -90,4 +90,10 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             cardDao.deleteCard(card)
         }
     }
+
+    fun deleteCards() {
+        viewModelScope.launch(Dispatchers.IO) {
+            cardDao.deleteCards()
+        }
+    }
 }

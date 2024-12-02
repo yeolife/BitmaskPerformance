@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CardDao {
-    
     // 조회
     @Query("""
         SELECT * 
@@ -43,6 +42,6 @@ interface CardDao {
     @Delete
     suspend fun deleteCard(card: CardEntity)
 
-    @Delete
-    suspend fun deleteCards(cards: List<CardEntity>)
+    @Query("delete from card")
+    suspend fun deleteCards()
 }

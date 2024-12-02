@@ -96,7 +96,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            logMemoryUsage("Before Bitmask Update")
+            logMemoryUsage("Before DirtyFlag Update")
 
             val updatedData = testData.map { card ->
                 val prevCard = cardDao.getCard(card.id)
@@ -105,7 +105,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
             cardDao.updateCards(updatedData)
 
-            logMemoryUsage("After Bitmask Update")
+            logMemoryUsage("After DirtyFlag Update")
         }
     }
 

@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "card")
 data class CardEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long,
 
     val col1: Int?,
     val col2: Int?,
@@ -75,4 +76,73 @@ data class CardEntity(
 
     val col61: Int?,
     val col62: Int?,
+
+    val df1: Boolean = false,
+    val df2: Boolean = false,
+    val df3: Boolean = false,
+    val df4: Boolean = false,
+    val df5: Boolean = false,
+    val df6: Boolean = false,
+    val df7: Boolean = false,
+    val df8: Boolean = false,
+    val df9: Boolean = false,
+    val df10: Boolean = false,
+
+    val df11: Boolean = false,
+    val df12: Boolean = false,
+    val df13: Boolean = false,
+    val df14: Boolean = false,
+    val df15: Boolean = false,
+    val df16: Boolean = false,
+    val df17: Boolean = false,
+    val df18: Boolean = false,
+    val df19: Boolean = false,
+    val df20: Boolean = false,
+
+    val df21: Boolean = false,
+    val df22: Boolean = false,
+    val df23: Boolean = false,
+    val df24: Boolean = false,
+    val df25: Boolean = false,
+    val df26: Boolean = false,
+    val df27: Boolean = false,
+    val df28: Boolean = false,
+    val df29: Boolean = false,
+    val df30: Boolean = false,
+
+    val df31: Boolean = false,
+    val df32: Boolean = false,
+    val df33: Boolean = false,
+    val df34: Boolean = false,
+    val df35: Boolean = false,
+    val df36: Boolean = false,
+    val df37: Boolean = false,
+    val df38: Boolean = false,
+    val df39: Boolean = false,
+    val df40: Boolean = false,
+
+    val df41: Boolean = false,
+    val df42: Boolean = false,
+    val df43: Boolean = false,
+    val df44: Boolean = false,
+    val df45: Boolean = false,
+    val df46: Boolean = false,
+    val df47: Boolean = false,
+    val df48: Boolean = false,
+    val df49: Boolean = false,
+    val df50: Boolean = false,
+
+    val df51: Boolean = false,
+    val df52: Boolean = false,
+    val df53: Boolean = false,
+    val df54: Boolean = false,
+    val df55: Boolean = false,
+    val df56: Boolean = false,
+    val df57: Boolean = false,
+    val df58: Boolean = false,
+    val df59: Boolean = false,
+    val df60: Boolean = false,
+
+    val df61: Boolean = false,
+    val df62: Boolean = false,
 )

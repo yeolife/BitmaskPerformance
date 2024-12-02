@@ -38,7 +38,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
     fun insertCards(size: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val testData = List(size) { _ ->
-                CardEntity(id = 0, rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                CardEntity(id = 0,
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
@@ -50,7 +50,8 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000))
             }
 
             cardDao.insertCards(testData)

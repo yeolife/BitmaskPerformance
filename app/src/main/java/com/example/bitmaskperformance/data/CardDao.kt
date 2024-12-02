@@ -11,7 +11,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CardDao {
+
     // 조회
+    @Query("""
+        SELECT * 
+        FROM card
+        WHERE id = :cardId
+    """)
+    fun getCard(cardId: Long): CardEntity
+
     @Query("""
         SELECT * 
         FROM card

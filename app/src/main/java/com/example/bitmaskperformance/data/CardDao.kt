@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CardDao {
-    // 조회
 
     // 조회
     @Query("""

@@ -7,6 +7,7 @@ import com.example.bitmaskperformance.data.AppDatabase
 import com.example.bitmaskperformance.data.CardDao
 import com.example.bitmaskperformance.data.CardEntity
 import com.example.bitmaskperformance.data.bitmaskColumn
+import com.example.bitmaskperformance.data.cardEntityBitmaskProperties
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -99,9 +100,16 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             logMemoryUsage("Before Bitmask Update")
 
             val updatedData = testData.map { card ->
-                val prevCard = cardDao.getCard(card.id)
-                card.copy(bitmask = bitmaskColumn(prevCard.bitmask, prevCard, card))
+                val prevCard = cardDao.getCard(card.id) ?: card
+                val updatedBitmask = bitmaskColumn(
+                    prevCard.bitmask,
+                    prevCard,
+                    card,
+                    cardEntityBitmaskProperties
+                )
+                card.copy(bitmask = updatedBitmask)
             }
+
             cardDao.updateCards(updatedData)
 
             logMemoryUsage("After Bitmask Update")

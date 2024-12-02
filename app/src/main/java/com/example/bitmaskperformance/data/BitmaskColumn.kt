@@ -1,5 +1,6 @@
 package com.example.bitmaskperformance.data
 
+import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation
@@ -10,28 +11,40 @@ import kotlin.reflect.full.memberProperties
 @Retention(AnnotationRetention.RUNTIME)
 annotation class BitPosition(val position: Int)
 
+data class BitmaskProperty<T>(
+    val bitPosition: Int,
+    val prop: KProperty1<T, *>
+)
+
+fun <T : Any> getBitmaskProperties(clazz: KClass<T>): List<BitmaskProperty<T>> {
+    return clazz.memberProperties.mapNotNull { prop ->
+        val bitPosition = prop.findAnnotation<BitPosition>()?.position
+        if (bitPosition != null) {
+            BitmaskProperty(bitPosition, prop as KProperty1<T, *>)
+        } else {
+            null
+        }
+    }
+}
+
+// Precompute for CardEntity
+val cardEntityBitmaskProperties = getBitmaskProperties(CardEntity::class)
+
 // 바뀐 컬럼 비트 켜기
-fun <T : Any> bitmaskColumn(prevBit: Long, dto1: T, dto2: T): Long {
+fun bitmaskColumn(
+    prevBit: Long,
+    dto1: CardEntity,
+    dto2: CardEntity,
+    properties: List<BitmaskProperty<CardEntity>>
+): Long {
     var newBit = prevBit
 
-    val properties = dto1::class.memberProperties
-
-    properties.forEach { prop ->
-        val bitPosition = prop.findAnnotation<BitPosition>()?.position
-        if (bitPosition == null) {
-            println("Property ${prop.name} does not have a BitPosition annotation.")
-            return@forEach
-        } else {
-            println("Property ${prop.name} has a BitPosition at $bitPosition.")
-        }
-
-        val typedProp = prop as? KProperty1<T, *> ?: return@forEach
-        val value1 = typedProp.get(dto1)
-        val value2 = typedProp.get(dto2)
+    for (bitmaskProp in properties) {
+        val value1 = bitmaskProp.prop.get(dto1)
+        val value2 = bitmaskProp.prop.get(dto2)
 
         if (value1 != value2) {
-            println("Property ${prop.name} changed. Setting bit at position $bitPosition.")
-            newBit = newBit or (1L shl bitPosition)
+            newBit = newBit or (1L shl bitmaskProp.bitPosition)
         }
     }
 

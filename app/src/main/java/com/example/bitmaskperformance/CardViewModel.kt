@@ -28,8 +28,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             cardDao.getAllCards().collect { cards ->
                 _cardList.value = cards
             }
-            logMemoryUsage("Before Bitmask Read")
-
+            logMemoryUsage("After Bitmask Read")
         }
     }
 

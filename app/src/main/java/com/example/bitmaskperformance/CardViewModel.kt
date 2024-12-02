@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bitmaskperformance.data.AppDatabase
 import com.example.bitmaskperformance.data.CardDao
 import com.example.bitmaskperformance.data.CardEntity
+import com.example.bitmaskperformance.data.bitmaskColumn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,20 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
                 _cardList.value = cards
             }
         }
+    }
+
+    private fun logMemoryUsage(tag: String) {
+        Runtime.getRuntime().gc()
+        val runtime = Runtime.getRuntime()
+        val usedMemory = runtime.totalMemory() - runtime.freeMemory()
+        println("$tag: Used memory = ${usedMemory / 1024} KB")
+    }
+
+    fun measureExecutionTime(tag: String, block: () -> Unit) {
+        val startTime = System.nanoTime()
+        block()
+        val elapsedTime = System.nanoTime() - startTime
+        println("$tag: Execution time = ${elapsedTime / 1_000_000} ms")
     }
 
     fun insertCard(card: CardEntity) {
@@ -64,24 +79,32 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun updateCards(size: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val testData = List(size) { index ->
-                CardEntity(id = index.toLong(), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
-            }
+        val testData = List(size) { index ->
+            CardEntity(id = index.toLong() + 1, rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
+        }
 
-            cardDao.updateCards(testData)
+        viewModelScope.launch(Dispatchers.IO) {
+            logMemoryUsage("Before Bitmask Update")
+
+            val updatedData = testData.map { card ->
+                val prevCard = cardDao.getCard(card.id)
+                card.copy(bitmask = bitmaskColumn(prevCard.bitmask, prevCard, card))
+            }
+            cardDao.updateCards(updatedData)
+
+            logMemoryUsage("After Bitmask Update")
         }
     }
 

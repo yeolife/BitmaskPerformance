@@ -12,6 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -25,17 +28,8 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-
-            val startMemory = logMemoryUsage()
-            val startTime = System.nanoTime()
             cardDao.getAllCards().collect { cards ->
                 _cardList.value = cards
-
-                val endMemory = logMemoryUsage()
-                val endTime = System.nanoTime()
-
-                Log.d("", "My Used Read Memory: ${endMemory - startMemory}")
-                Log.d("", "My Used Read Time: ${(endTime - startTime) / 1000000} ms")
             }
         }
     }

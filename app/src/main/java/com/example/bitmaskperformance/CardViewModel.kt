@@ -72,7 +72,16 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
             }
 
+            logMemoryUsage("Before Bitmask Update")
+            val startTime = System.nanoTime()
+
             cardDao.insertCards(testData)
+
+            logMemoryUsage("After Bitmask Update")
+
+            val endTime = System.nanoTime()
+            val duration = (endTime - startTime) / 1000000 // 밀리초로 변환
+            Log.d("PerformanceTest", "Function A 실행 시간: $duration ms")
         }
     }
 
@@ -102,6 +111,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
 
             logMemoryUsage("Before Bitmask Update")
+
             val startTime = System.nanoTime()
 
             val updatedData = testData.map { card ->
@@ -111,8 +121,8 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             cardDao.updateCards(updatedData)
 
             logMemoryUsage("After Bitmask Update")
-            val endTime = System.nanoTime()
 
+            val endTime = System.nanoTime()
             val duration = (endTime - startTime) / 1000000 // 밀리초로 변환
             Log.d("PerformanceTest", "Function A 실행 시간: $duration ms")
         }

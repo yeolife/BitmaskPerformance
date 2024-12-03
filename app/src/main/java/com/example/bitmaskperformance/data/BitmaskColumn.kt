@@ -12,30 +12,16 @@ annotation class BitPosition(val position: Int)
 
 // 바뀐 컬럼 비트 켜기
 fun <T : Any> bitmaskColumn(prevBit: Long, dto1: T, dto2: T): Long {
-    var newBit = prevBit
+    return dto1::class.memberProperties
+        .filter { it.findAnnotation<BitPosition>() != null }
+        .fold(prevBit) { newBit, prop ->
+            val bitPosition = prop.findAnnotation<BitPosition>()!!.position
+            val typedProp = prop as KProperty1<T, *>
+            val value1 = typedProp.get(dto1)
+            val value2 = typedProp.get(dto2)
 
-    val properties = dto1::class.memberProperties
-
-    properties.forEach { prop ->
-        val bitPosition = prop.findAnnotation<BitPosition>()?.position
-        if (bitPosition == null) {
-            println("Property ${prop.name} does not have a BitPosition annotation.")
-            return@forEach
-        } else {
-            println("Property ${prop.name} has a BitPosition at $bitPosition.")
+            if (value1 != value2) newBit or (1L shl bitPosition) else newBit
         }
-
-        val typedProp = prop as? KProperty1<T, *> ?: return@forEach
-        val value1 = typedProp.get(dto1)
-        val value2 = typedProp.get(dto2)
-
-        if (value1 != value2) {
-            println("Property ${prop.name} changed. Setting bit at position $bitPosition.")
-            newBit = newBit or (1L shl bitPosition)
-        }
-    }
-
-    return newBit
 }
 
 // 바뀌지 않은 컬럼은 null

@@ -1,13 +1,13 @@
 package com.example.bitmaskperformance
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bitmaskperformance.data.AppDatabase
 import com.example.bitmaskperformance.data.CardDao
 import com.example.bitmaskperformance.data.CardEntity
 import com.example.bitmaskperformance.data.bitmaskColumn
-import com.example.bitmaskperformance.data.cardEntityBitmaskProperties
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,34 +25,33 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
+            val startMemory = logMemoryUsage()
+            val startTime = System.nanoTime()
             cardDao.getAllCards().collect { cards ->
                 _cardList.value = cards
+
+                val endMemory = logMemoryUsage()
+                val endTime = System.nanoTime()
+
+                Log.d("", "My Used Read Memory: ${endMemory - startMemory}")
+                Log.d("", "My Used Read Time: ${(endTime - startTime) / 1000000} ms")
             }
         }
     }
 
-    private fun logMemoryUsage(tag: String) {
+    private fun logMemoryUsage(): Long {
         Runtime.getRuntime().gc()
         val runtime = Runtime.getRuntime()
         val usedMemory = runtime.totalMemory() - runtime.freeMemory()
-        println("$tag: Used memory = ${usedMemory / 1024} KB")
-    }
 
-    fun measureExecutionTime(tag: String, block: () -> Unit) {
-        val startTime = System.nanoTime()
-        block()
-        val elapsedTime = System.nanoTime() - startTime
-        println("$tag: Execution time = ${elapsedTime / 1_000_000} ms")
-    }
-
-    fun insertCard(card: CardEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            cardDao.insertCard(card)
-        }
+        return usedMemory
     }
 
     fun insertCards(size: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            val startMemory = logMemoryUsage()
+            val startTime = System.nanoTime()
+
             val testData = List(size) { _ ->
                 CardEntity(id = 0, rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
@@ -70,55 +69,49 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             }
 
             cardDao.insertCards(testData)
-        }
-    }
 
-    fun updateCard(card: CardEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            cardDao.upsertCard(card)
+            val endMemory = logMemoryUsage()
+            val endTime = System.nanoTime()
+
+            Log.d("", "My Used Insert Memory: ${endMemory - startMemory}")
+            Log.d("", "My Used Insert Time: ${(endTime - startTime) / 1000000} ms")
         }
     }
 
     fun updateCards(size: Int) {
-        val testData = List(size) { index ->
-            CardEntity(id = index.toLong() + 1, rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
-                rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
-        }
-
         viewModelScope.launch(Dispatchers.IO) {
-            logMemoryUsage("Before Bitmask Update")
+
+            val startMemory = logMemoryUsage()
+            val startTime = System.nanoTime()
+
+            val testData = List(size) { index ->
+                CardEntity(id = index.toLong() + 1, rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+                    rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
+            }
 
             val updatedData = testData.map { card ->
-                val prevCard = cardDao.getCard(card.id) ?: card
-                val updatedBitmask = bitmaskColumn(
-                    prevCard.bitmask,
-                    prevCard,
-                    card,
-                    cardEntityBitmaskProperties
-                )
-                card.copy(bitmask = updatedBitmask)
+                val prevCard = cardDao.getCard(card.id)
+                card.copy(bitmask = bitmaskColumn(prevCard.bitmask, prevCard, card))
             }
 
             cardDao.updateCards(updatedData)
 
-            logMemoryUsage("After Bitmask Update")
-        }
-    }
+            val endMemory = logMemoryUsage()
+            val endTime = System.nanoTime()
 
-    fun deleteCard(card: CardEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            cardDao.deleteCard(card)
+            Log.d("", "My Used Update Memory: ${endMemory - startMemory}")
+            Log.d("", "My Used Update Time: ${(endTime - startTime) / 1000000} ms")
         }
     }
 

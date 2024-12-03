@@ -81,7 +81,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
             val endTime = System.nanoTime()
             val duration = (endTime - startTime) / 1000000 // 밀리초로 변환
-            Log.d("PerformanceTest", "Function A 실행 시간: $duration ms")
+            Log.d("PerformanceTest", "실행 시간: $duration ms")
         }
     }
 

@@ -49,10 +49,10 @@ fun Greeting(viewModel: CardViewModel, modifier: Modifier = Modifier) {
                         modifier = Modifier.padding(end = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Button(onClick = { viewModel.insertCards(100000) }) {
+                        Button(onClick = { viewModel.insertCards(5000) }) {
                             Text("Add")
                         }
-                        Button(onClick = { viewModel.updateCards(100000) }) {
+                        Button(onClick = { viewModel.updateCards(5000) }) {
                             Text("Update")
                         }
                         Button(onClick = { viewModel.deleteCards() }) {

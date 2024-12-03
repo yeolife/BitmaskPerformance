@@ -25,6 +25,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
+
             val startMemory = logMemoryUsage()
             val startTime = System.nanoTime()
             cardDao.getAllCards().collect { cards ->

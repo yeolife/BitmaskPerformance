@@ -9,14 +9,11 @@ import com.example.bitmaskperformance.data.CardDao
 import com.example.bitmaskperformance.data.CardEntity
 import com.example.bitmaskperformance.data.bitmaskColumn
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
-
 
 class CardViewModel(application: Application): AndroidViewModel(application) {
     private val rd = Random

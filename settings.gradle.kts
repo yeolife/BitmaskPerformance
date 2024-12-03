@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "bitmaskPerformance"
 include(":app")
- 
+include(":benchmark")

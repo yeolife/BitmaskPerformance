@@ -46,12 +46,6 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
         return usedMemory
     }
 
-    fun insertCard(card: CardEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            cardDao.insertCard(card)
-        }
-    }
-
     fun insertCards(size: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val startMemory = logMemoryUsage()
@@ -81,12 +75,6 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
             Log.d("", "My Used Insert Memory: ${endMemory - startMemory}")
             Log.d("", "My Used Insert Time: ${(endTime - startTime) / 1000000} ms")
-        }
-    }
-
-    fun updateCard(card: CardEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            cardDao.upsertCard(card)
         }
     }
 
@@ -192,12 +180,6 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             df61 = prev.col61 != updated.col61,
             df62 = prev.col62 != updated.col62
         )
-    }
-
-    fun deleteCard(card: CardEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            cardDao.deleteCard(card)
-        }
     }
 
     fun deleteCards() {

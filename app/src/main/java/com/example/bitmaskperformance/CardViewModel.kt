@@ -121,8 +121,8 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             val endMemory = logMemoryUsage()
             val endTime = System.nanoTime()
 
-            Log.d("", "My Used Insert Memory: ${endMemory - startMemory}")
-            Log.d("", "My Used Insert Time: ${(endTime - startTime) / 1000000} ms")
+            Log.d("", "My Used Update Memory: ${endMemory - startMemory}")
+            Log.d("", "My Used Update Time: ${(endTime - startTime) / 1000000} ms")
         }
     }
 

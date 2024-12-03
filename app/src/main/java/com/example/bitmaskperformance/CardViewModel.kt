@@ -1,6 +1,7 @@
 package com.example.bitmaskperformance
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bitmaskperformance.data.AppDatabase
@@ -97,6 +98,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.IO) {
             logMemoryUsage("Before DirtyFlag Update")
+            val startTime = System.nanoTime()
 
             val updatedData = testData.map { card ->
                 val prevCard = cardDao.getCard(card.id)
@@ -106,6 +108,10 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             cardDao.updateCards(updatedData)
 
             logMemoryUsage("After DirtyFlag Update")
+            val endTime = System.nanoTime()
+
+            val duration = (endTime - startTime) / 1000000 // 밀리초로 변환
+            Log.d("PerformanceTest", "Function A 실행 시간: $duration ms")
         }
     }
 

@@ -72,12 +72,12 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
                     rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000))
             }
 
-            logMemoryUsage("Before Bitmask Update")
+            logMemoryUsage("Before Bitmask Insert")
             val startTime = System.nanoTime()
 
             cardDao.insertCards(testData)
 
-            logMemoryUsage("After Bitmask Update")
+            logMemoryUsage("After Bitmask Insert")
 
             val endTime = System.nanoTime()
             val duration = (endTime - startTime) / 1000000 // 밀리초로 변환

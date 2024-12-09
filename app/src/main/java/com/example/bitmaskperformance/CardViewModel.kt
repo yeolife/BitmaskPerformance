@@ -108,7 +108,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
     }
 
     private fun setDirtyFlags(prev: CardEntity, updated: CardEntity): CardEntity {
-        return updated.copy(
+        return prev.copy(
             df1 = prev.col1 != updated.col1,
             df2 = prev.col2 != updated.col2,
             df3 = prev.col3 != updated.col3,

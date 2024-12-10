@@ -1,6 +1,5 @@
 package com.example.bitmaskperformance.data
 
-import kotlin.reflect.KClass
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.findAnnotation

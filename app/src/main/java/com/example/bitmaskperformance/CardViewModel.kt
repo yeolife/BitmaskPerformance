@@ -38,15 +38,17 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun insertCards() {
-        measurePerformance("Insert") {
-            val testData = randomEntity(10000, INSERT)
+        val testData = randomEntity(10000, INSERT)
+
+        measurePerformance(INSERT) {
             cardDao.insertCards(testData)
         }
     }
 
     fun updateCards() {
-        measurePerformance("Update") {
-            val testData = randomEntity(10000, UPDATE)
+        val testData = randomEntity(10000, UPDATE)
+
+        measurePerformance(UPDATE) {
             val updatedData = testData.map { updateCard ->
                 val prevCard = cardDao.getCard(updateCard.id)
                 updateCard.copy(bitmask = changeBitmaskEntity(prevCard.bitmask, prevCard, updateCard))

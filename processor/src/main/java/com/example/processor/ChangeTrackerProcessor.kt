@@ -17,12 +17,10 @@ class ChangeTrackerProcessor(
     private val logger: KSPLogger
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        // @Entity 붙은 클래스 찾기
         val entitySymbols = resolver.getSymbolsWithAnnotation("androidx.room.Entity")
             .filterIsInstance<KSClassDeclaration>()
 
         for (entityClass in entitySymbols) {
-            // ColumnBitIndex 애노테이션 달린 프로퍼티 수집
             val bitIndexedProperties: List<Pair<String, Int>> = entityClass.getAllProperties()
                 .mapNotNull { prop ->
                     val anno = prop.annotations.firstOrNull { it.shortName.asString() == "TrackChanges" } ?: return@mapNotNull null
@@ -52,12 +50,11 @@ class ChangeTrackerProcessor(
 
         val fileBuilder = FileSpec.builder(packageName, fileName)
 
-        // calculateBitmaskComparedTo 함수 생성
         val funcBuilder = FunSpec.builder("calculateBitmaskComparedTo")
             .receiver(entityType)
             .addParameter("other", entityType)
             .returns(Long::class)
-            .addStatement("var mask = 0L")
+            .addStatement("var mask = this.bitmask")
 
         mapping.forEach { (propName, idx) ->
             funcBuilder.addStatement(

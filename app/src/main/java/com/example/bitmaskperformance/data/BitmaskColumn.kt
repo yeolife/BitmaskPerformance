@@ -11,7 +11,7 @@ import kotlin.reflect.full.memberProperties
 annotation class BitPosition(val position: Int)
 
 // 바뀐 컬럼 비트 켜기
-fun <T : Any> bitmaskColumn(prevBit: Long, dto1: T, dto2: T): Long {
+fun <T : Any> changeBitmaskEntity(prevBit: Long, dto1: T, dto2: T): Long {
     var newBit = prevBit
 
     val properties = dto1::class.memberProperties
@@ -39,7 +39,7 @@ fun <T : Any> bitmaskColumn(prevBit: Long, dto1: T, dto2: T): Long {
 }
 
 // 바뀌지 않은 컬럼은 null
-fun <T : Any> getBitmaskDto(columnUpdate: Long, dto: T): T {
+fun <T : Any> getBitmaskEntity(columnUpdate: Long, dto: T): T {
     val kClass = dto::class
     if (!kClass.isData) {
         throw IllegalArgumentException("Only data classes are supported")

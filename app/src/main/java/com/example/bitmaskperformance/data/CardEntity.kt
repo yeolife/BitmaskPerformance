@@ -2,6 +2,8 @@ package com.example.bitmaskperformance.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.bitmaskperformance.CardViewModel.Companion.UPDATE
+import kotlin.random.Random
 
 @Entity(tableName = "card")
 data class CardEntity(
@@ -146,3 +148,25 @@ data class CardEntity(
     val df61: Boolean = false,
     val df62: Boolean = false,
 )
+
+fun randomEntity(size: Int, state: String): List<CardEntity> {
+    val rd = Random
+
+    return List(size) { index ->
+        CardEntity(id = if(state == UPDATE) index.toLong() + 1 else 0L,
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000), rd.nextInt(10000),
+            rd.nextInt(10000), rd.nextInt(10000))
+    }
+}
+

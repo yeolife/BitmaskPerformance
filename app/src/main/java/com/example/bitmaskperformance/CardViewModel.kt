@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bitmaskperformance.data.AppDatabase
 import com.example.bitmaskperformance.data.CardDao
 import com.example.bitmaskperformance.data.CardEntity
-import com.example.bitmaskperformance.data.changeBitmaskEntity
+import com.example.bitmaskperformance.data.updateBitmaskForChangedColumns
 import com.example.bitmaskperformance.data.randomEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +51,7 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
         measurePerformance(UPDATE) {
             val updatedData = testData.map { updateCard ->
                 val prevCard = cardDao.getCard(updateCard.id)
-                updateCard.copy(bitmask = prevCard.changeBitmaskEntity(updateCard))
+                updateCard.copy(bitmask = prevCard.updateBitmaskForChangedColumns(updateCard))
             }
             cardDao.updateCards(updatedData)
         }
@@ -69,6 +69,8 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
             val startTime = System.nanoTime()
 
             block()
+
+            System.gc()
 
             val endMemory = logMemoryUsage()
             val endTime = System.nanoTime()

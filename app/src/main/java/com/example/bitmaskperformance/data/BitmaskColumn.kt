@@ -1,7 +1,7 @@
 package com.example.bitmaskperformance.data
 
 // 바뀐 컬럼 비트 켜기
-fun CardEntity.changeBitmaskEntity(dto: CardEntity): Long {
+fun CardEntity.updateBitmaskForChangedColumns(dto: CardEntity): Long {
     var newBit = this.bitmask
 
     if (this.col1 != dto.col1) newBit = newBit or (1L shl 0)
@@ -71,7 +71,7 @@ fun CardEntity.changeBitmaskEntity(dto: CardEntity): Long {
 }
 
 // 바뀌지 않은 컬럼은 null
-fun CardEntity.getBitmaskEntity(dto: CardEntity): CardEntity {
+fun CardEntity.applyBitmaskToNullableColumns(dto: CardEntity): CardEntity {
     return dto.copy(
         col1 = if (bitmask and (1L shl 0) != 0L) dto.col1 else null,
         col2 = if (bitmask and (1L shl 1) != 0L) dto.col2 else null,

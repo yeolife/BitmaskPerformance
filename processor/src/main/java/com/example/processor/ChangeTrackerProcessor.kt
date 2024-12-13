@@ -50,22 +50,37 @@ class ChangeTrackerProcessor(
 
         val fileBuilder = FileSpec.builder(packageName, fileName)
 
-        val funcBuilder = FunSpec.builder("calculateBitmaskComparedTo")
+        // 첫번째 함수
+        val funcBuilder = FunSpec.builder("updateBitmaskForChangedColumns")
             .receiver(entityType)
             .addParameter("other", entityType)
             .returns(Long::class)
-            .addStatement("var mask = this.bitmask")
-
-        mapping.forEach { (propName, idx) ->
-            funcBuilder.addStatement(
-                "if (this.%L != other.%L) mask = mask or (1L shl %L)",
-                propName, propName, idx
-            )
-        }
-
-        funcBuilder.addStatement("return mask")
+            .addCode(buildString {
+                append("var mask = this.bitmask\n")
+                mapping.forEach { (propName, idx) ->
+                    append("if (this.$propName != other.$propName) mask = mask or (1L shl $idx)\n")
+                }
+                append("return mask\n")
+            })
 
         fileBuilder.addFunction(funcBuilder.build())
+
+        // 두번째 함수
+        val nullFuncBuilder = FunSpec.builder("applyBitmaskToNullableColumns")
+            .receiver(entityType)
+            .addParameter("other", entityType)
+            .returns(entityType)
+            .addCode(buildString {
+                append("return this.copy(\n")
+                // mapping을 기반으로 코드 생성
+                mapping.forEachIndexed { index, (propName, _) ->
+                    val comma = if (index == mapping.lastIndex) "" else ","
+                    append("    $propName = if (bitmask and (1L shl $index) != 0L) this.$propName else null$comma\n")
+                }
+                append(")\n")
+            })
+
+        fileBuilder.addFunction(nullFuncBuilder.build())
 
         fileBuilder.build().writeTo(codeGenerator, Dependencies(false))
     }

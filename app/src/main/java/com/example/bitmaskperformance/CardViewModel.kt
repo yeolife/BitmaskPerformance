@@ -72,6 +72,8 @@ class CardViewModel(application: Application): AndroidViewModel(application) {
 
             block()
 
+            System.gc()
+
             val endMemory = logMemoryUsage()
             val endTime = System.nanoTime()
 
